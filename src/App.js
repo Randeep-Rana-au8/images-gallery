@@ -21,11 +21,10 @@ function App() {
   };
 
   const fetchImages = () => {
+    const clientId = "l9TopwNImt3LKnyxRkYkNvcjklZB-46C5GKzwMD3ubo";
     setTimeout(() => {
       axios
-        .get(
-          "https://api.unsplash.com/photos/random?client_id=VP3vNPwuUesOW3z54cpzJJ1pUPqW4aUoPWYt5aGEI6Y&count=10"
-        )
+        .get("https://api.unsplash.com/photos/random?client_id=" + clientId + "&count=10")
         .then((res) => {
           setCollection([...collection, ...res.data]);
         })
@@ -35,6 +34,7 @@ function App() {
 
   useEffect(() => {
     fetchImages();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

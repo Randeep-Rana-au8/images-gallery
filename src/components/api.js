@@ -3,13 +3,14 @@ import axios from "axios";
 
 export const SearchImages = (query, setQuery) => {
   const [state, setState] = useState([]);
+  const clientId = "l9TopwNImt3LKnyxRkYkNvcjklZB-46C5GKzwMD3ubo";
   useEffect(() => {
     if (query) {
       axios
         .get(
-          "https://api.unsplash.com/search/photos?query=" +
+          `https://api.unsplash.com/search/photos?query=" +
             query +
-            "&client_id=VP3vNPwuUesOW3z54cpzJJ1pUPqW4aUoPWYt5aGEI6Y"
+            "&client_id=${clientId}`
         )
         .then((res) => {
           setState(res.data.results);
