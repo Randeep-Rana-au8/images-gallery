@@ -1,18 +1,47 @@
 import { useState } from "react";
 import "./App.css";
-import LoadImages, { SearchImages } from "./components/api";
+import { SearchImages } from "./components/api";
 import Image from "./components/Image";
+import Loader from "./components/Loader";
+import InfiniteScroll from "react-infinite-scroll-component";
+import axios from "axios";
+import { useEffect } from "react/cjs/react.development";
 
 function App() {
   const [query, setQuery] = useState("");
   const [searchQ, setSearchQ] = useState();
-  const Collection = LoadImages();
+  const [collection, setCollection] = useState([]);
+  const [isSearch, setIsSearch] = useState(false);
   const SearchCollection = SearchImages(searchQ, setSearchQ);
 
   const search = (e) => {
     e.preventDefault();
     setSearchQ(query);
+    setIsSearch(true);
   };
+
+  const fetchImages = () => {
+    setTimeout(() => {
+      axios
+        .get(
+          "https://api.unsplash.com/photos/random?client_id=VP3vNPwuUesOW3z54cpzJJ1pUPqW4aUoPWYt5aGEI6Y&count=10"
+        )
+        .then((res) => {
+          setCollection([...collection, ...res.data]);
+        })
+        .catch((e) => console.error(e));
+    }, 1200);
+  };
+
+  useEffect(() => {
+    fetchImages();
+  }, []);
+
+  useEffect(() => {
+    if (query === "") {
+      setIsSearch(false);
+    }
+  }, [query]);
 
   return (
     <div className="App">
@@ -20,14 +49,27 @@ function App() {
         <input type="text" placeholder="Search" onChange={(e) => setQuery(e.target.value)} />
         <button type="submit">Search</button>
       </form>
-      <div className="container">
-        {SearchCollection.map((data, index) => (
-          <Image src={data.urls.thumb} alt={data.alt_description} key={index} />
-        ))}
-        {Collection.map((data, index) => (
-          <Image src={data.urls.thumb} alt={data.alt_description} key={index} />
-        ))}
-      </div>
+
+      {isSearch ? (
+        <div className="container">
+          {SearchCollection.map((data, index) => (
+            <Image src={data.urls.thumb} alt={data.alt_description} key={index} />
+          ))}
+        </div>
+      ) : (
+        <InfiniteScroll
+          dataLength={collection.length}
+          hasMore={true}
+          next={fetchImages}
+          loader={<Loader />}
+        >
+          <div className="container">
+            {collection.map((data, index) => (
+              <Image src={data.urls.thumb} alt={data.alt_description} key={index} />
+            ))}
+          </div>
+        </InfiniteScroll>
+      )}
     </div>
   );
 }
