@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import { SearchImages } from "./components/api";
 import Image from "./components/Image";
 import Loader from "./components/Loader";
 import InfiniteScroll from "react-infinite-scroll-component";
 import axios from "axios";
-import { useEffect } from "react/cjs/react.development";
 
 function App() {
   const [query, setQuery] = useState("");
@@ -34,7 +33,6 @@ function App() {
 
   useEffect(() => {
     fetchImages();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
