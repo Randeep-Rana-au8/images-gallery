@@ -7,11 +7,7 @@ export const SearchImages = (query, setQuery) => {
   useEffect(() => {
     if (query) {
       axios
-        .get(
-          `https://api.unsplash.com/search/photos?query=" +
-            query +
-            "&client_id=${clientId}`
-        )
+        .get(`https://api.unsplash.com/search/photos?query=${query}&client_id=${clientId}`)
         .then((res) => {
           setState(res.data.results);
           setQuery("");
